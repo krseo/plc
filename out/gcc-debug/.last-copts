@@ -1,0 +1,1 @@
+-g -Wall   -I/usr/include -fno-stack-protector -DXMLPARSER=libxml -DWITH_PARSIM -DWITH_NETBUILDER  -I. -Isrc -Isrc/Messages -Isrc/PlcApp -Isrc/PlcBus -Isrc/PlcNic -Isrc/PlcNic/PlcMac -Isrc/PlcNic/PlcPhy -Isrc/Plctst -IC:/opt/omnetpp-4.6/include
