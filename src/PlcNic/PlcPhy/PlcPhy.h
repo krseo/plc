@@ -23,9 +23,12 @@
  */
 class PlcPhy : public cSimpleModule
 {
-  protected:
+protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    void handlePlcSignal(cMessage *msg);
+    void sendDown(cMessage *msg);
+    void sendUp(cMessage *msg);
 };
 
 #endif

@@ -30,9 +30,32 @@ void PlcPhy::handleMessage(cMessage *msg)
             send(msg, "gt$o");
         }
         else if(msg->arrivedOn("gt$i")){
-            EV << "Message From PlcBus\n";
-            send(msg, "OutToMac");
+            //EV << "Message From PlcBus\n";
+            //send(msg, "OutToMac");
+            handlePlcSignal(msg);
         }else{
             EV << "Message From ?  Something Wrong\n";
         }
+}
+
+void PlcPhy::handlePlcSignal(cMessage *msg)
+{
+    EV << "Message From PlcBus\n";
+    send(msg, "OutToMac");
+}
+
+void PlcPhy::sendUp(cMessage *msg)
+{
+    PlcSignal *Signal  = (PlcSignal*) msg;
+ //   PlcFrame *Frame = (PlcFrame*)Signal->decapsulate();
+    send(Signal, "OutToApp");
+}
+
+void PlcPhy::sendDown(cMessage *msg)
+{
+//    PlcFrame *Frame = (PlcFrame*)msg;
+    PlcSignal *Signal  = new PlcSignal();
+//    Signal->encapsulate(Frame);
+    send(Signal,"OutToPhy");
+   // Signal->
 }

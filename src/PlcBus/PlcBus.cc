@@ -68,30 +68,30 @@ void PlcBus::finish()
 
 void PlcBus::handleMessage(cMessage *msg)
 {
-    if (!msg->isSelfMessage())
-        {
-            // Handle frame sent down from the network entity
-            int tapPoint = msg->getArrivalGate()->getIndex();
-            EV << "BUS: Frame " << msg << " arrived on tap " << tapPoint << endl;
-            int i;
-            double delay;
-            for (i=0;i<numTaps;i++){
-                if(i != tapPoint){
-                    delay = abs(tap[tapPoint].position-tap[i].position)/propagationSpeed;
-                    EV << "delay " << tapPoint <<" to" << i << " is " << delay << endl;
-                    cMessage *msg2 = msg->dup();
-                    msg2->setKind(i);
-                    msg2->addPar("delay");
-                    msg2->par("delay").setLongValue(delay);
-                    scheduleAt(simTime()+delay, msg2);
-                }
+    if (msg->isSelfMessage())
+    {
+        EV << "BUS: Frame " << msg << " Scheduled arrived on tap " << endl;
+        int idx;
+        //idx = msg->getKind()
+        send(msg, "gt$o", msg->getKind());
+    }
+    else   {
+        // Handle frame sent down from the network entity
+        int tapPoint = msg->getArrivalGate()->getIndex();
+        EV << "BUS: Frame " << msg << " arrived on tap " << tapPoint << endl;
+        int i;
+        double delay;
+        for (i=0;i<numTaps;i++){
+            if(i != tapPoint){
+                delay = abs(tap[tapPoint].position-tap[i].position)/propagationSpeed;
+                EV << "delay " << tapPoint <<" to" << i << " is " << delay << endl;
+                cMessage *msg2 = msg->dup();
+                msg2->setKind(i);
+                msg2->addPar("delay");
+                msg2->par("delay").setLongValue(delay);
+                scheduleAt(simTime()+delay, msg2);
             }
         }
-        else
-        {
-            EV << "BUS: Frame " << msg << " Scheduled arrived on tap " << endl;
-            int idx;
-            //idx = msg->getKind()
-            send(msg, "gt$o", msg->getKind());
-        }
+    }
+
 }
